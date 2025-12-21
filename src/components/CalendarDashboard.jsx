@@ -5,7 +5,7 @@ import MonthCard from './MonthCard';
 import InfoArticles from './InfoArticles';
 import BlogSection from './BlogSection';
 import { calculateVacationPlans, getRecommendedSchedule } from '../utils/calculator';
-import html2canvas from 'html2canvas';
+import { toPng } from 'html-to-image';
 import confetti from 'canvas-confetti';
 import Lottie from 'lottie-react';
 
@@ -14,6 +14,7 @@ const CalendarDashboard = () => {
     const [isUnlocked, setIsUnlocked] = useState(false);
     const [animationData, setAnimationData] = useState(null);
     const dashboardRef = useRef(null);
+    const recommendationRef = useRef(null);
 
     useEffect(() => {
         // Fetch a high-quality airplane/travel animation
@@ -49,20 +50,18 @@ const CalendarDashboard = () => {
             alert('일정 잠금을 해제한 후 이미지로 저장할 수 있습니다.');
             return;
         }
-        if (dashboardRef.current) {
+        if (recommendationRef.current) {
             try {
-                const canvas = await html2canvas(dashboardRef.current, {
-                    scale: 2,
-                    useCORS: true,
-                    backgroundColor: '#f8fafc',
-                    logging: false,
-                    ignoreElements: (element) => element.getAttribute('data-html2canvas-ignore') === 'true'
+                const dataUrl = await toPng(recommendationRef.current, {
+                    quality: 0.95,
+                    pixelRatio: 2,
+                    backgroundColor: '#3b82f6',
+                    skipFonts: true  // Skip web font embedding to avoid CORS
                 });
 
-                const image = canvas.toDataURL('image/png');
                 const link = document.createElement('a');
-                link.href = image;
-                link.download = `연차나우_2026_연차계획_${leaveCount}개.png`;
+                link.href = dataUrl;
+                link.download = `연차나우_2026_맞춤분석_${leaveCount}개.png`;
                 link.click();
 
                 // Fun effect!
@@ -207,7 +206,7 @@ const CalendarDashboard = () => {
                     </div>
                 </section>
 
-                <section className="bg-blue-600 rounded-3xl p-8 mb-16 text-white shadow-2xl shadow-blue-500/20">
+                <section ref={recommendationRef} className="bg-blue-600 rounded-3xl p-8 mb-16 text-white shadow-2xl shadow-blue-500/20">
                     <div className="flex flex-col md:flex-row items-center gap-8 mb-10">
                         <div className="flex-1">
                             <h3 className="text-2xl font-bold mb-2">내 연차 개수 맞춤 분석</h3>
