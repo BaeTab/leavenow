@@ -8,6 +8,7 @@ import { calculateVacationPlans, getRecommendedSchedule } from '../utils/calcula
 import { toPng } from 'html-to-image';
 import confetti from 'canvas-confetti';
 import Lottie from 'lottie-react';
+import SEO from './SEO';
 
 const CalendarDashboard = () => {
     const [leaveCount, setLeaveCount] = useState(15);
@@ -80,6 +81,7 @@ const CalendarDashboard = () => {
 
     return (
         <div className="min-h-screen bg-slate-50 pb-20 overflow-x-hidden">
+            <SEO />
             <header className="relative bg-gradient-to-br from-blue-600 to-blue-400 text-white pt-16 pb-32 px-6 overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
                     <div className="absolute top-10 left-10 w-64 h-64 bg-white rounded-full blur-3xl" />
